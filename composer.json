@@ -10,5 +10,10 @@
             "name": "eltortuganegra",
             "email": "jorge.sanchez@eltortuganegra.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "cacf\\": "src/"
+        }
+    }
 }
