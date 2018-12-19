@@ -5,6 +5,7 @@ namespace cacf\infrastructure\repositories;
 use cacf\models\identifier\Identifier;
 use cacf\models\identifier\IdentifierFactory;
 use cacf\models\user\User;
+use Ramsey\Uuid\Uuid;
 
 class UserRepositoryInMemoryImplementation implements UserRepository
 {
@@ -18,7 +19,7 @@ class UserRepositoryInMemoryImplementation implements UserRepository
 
     public function getNextIdentifier(): Identifier
     {
-        $value = rand(0,1000);
+        $value = Uuid::uuid4();
         $identifier = $this->identifierFactory->create($value);
 
         return $identifier;
