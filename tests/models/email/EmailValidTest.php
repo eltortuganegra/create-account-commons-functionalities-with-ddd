@@ -1,8 +1,8 @@
 <?php
 
 
-use cacf\models\Email;
-use cacf\models\EmailFactory;
+use cacf\models\email\Email;
+use cacf\models\email\EmailFactory;
 use PHPUnit\Framework\TestCase;
 
 class EmailValidTest extends TestCase

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace cacf\models;
+namespace cacf\models\email;
 
 
 class EmailImplementation implements Email

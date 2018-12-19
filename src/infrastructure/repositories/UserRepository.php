@@ -2,8 +2,9 @@
 
 namespace cacf\infrastructure\repositories;
 
-use cacf\models\Identifier;
-use cacf\models\User;
+
+use cacf\models\identifier\Identifier;
+use cacf\models\user\User;
 
 interface UserRepository
 {

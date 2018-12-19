@@ -1,7 +1,7 @@
 <?php
 
 
-namespace cacf\models;
+namespace cacf\models\identifier;
 
 
 interface Identifier

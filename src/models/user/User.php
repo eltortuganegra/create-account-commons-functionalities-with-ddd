@@ -1,7 +1,11 @@
 <?php
 
-namespace cacf\models;
+namespace cacf\models\user;
 
+
+use cacf\models\email\Email;
+use cacf\models\identifier\Identifier;
+use cacf\models\password\Password;
 
 interface User
 {

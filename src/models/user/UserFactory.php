@@ -1,7 +1,6 @@
 <?php
 
-
-namespace cacf\models;
+namespace cacf\models\user;
 
 
 class UserFactory

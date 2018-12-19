@@ -2,8 +2,7 @@
 
 
 use cacf\infrastructure\repositories\UserRepositoryInMemoryFactory;
-use cacf\models\IdentifierFactory;
-use cacf\models\User;
+use cacf\models\identifier\IdentifierFactory;
 use cacf\services\ServiceResponse;
 use cacf\services\signUp\SignUpServiceFactory;
 

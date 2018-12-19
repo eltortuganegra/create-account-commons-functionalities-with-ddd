@@ -2,7 +2,7 @@
 
 namespace cacf\infrastructure\repositories;
 
-use cacf\models\IdentifierFactory;
+use cacf\models\identifier\IdentifierFactory;
 
 class UserRepositoryInMemoryFactory
 {

@@ -4,7 +4,7 @@
 namespace cacf\services\signUp;
 
 
-use cacf\models\Identifier;
+use cacf\models\identifier\Identifier;
 use cacf\services\ServiceResponse;
 
 class SignUpServiceResponse implements ServiceResponse

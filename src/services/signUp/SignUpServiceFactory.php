@@ -3,9 +3,9 @@
 namespace cacf\services\signUp;
 
 use cacf\infrastructure\repositories\UserRepository;
-use cacf\models\EmailFactory;
-use cacf\models\PasswordFactory;
-use cacf\models\UserFactory;
+use cacf\models\email\EmailFactory;
+use cacf\models\password\PasswordFactory;
+use cacf\models\user\UserFactory;
 
 class SignUpServiceFactory
 {

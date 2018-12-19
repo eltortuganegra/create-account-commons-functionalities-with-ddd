@@ -2,7 +2,7 @@
 
 
 use cacf\infrastructure\repositories\UserRepositoryInMemoryFactory;
-use cacf\models\UserFactory;
+use cacf\models\user\UserFactory;
 use PHPUnit\Framework\TestCase;
 
 class UserRepositoryInMemoryTest extends TestCase

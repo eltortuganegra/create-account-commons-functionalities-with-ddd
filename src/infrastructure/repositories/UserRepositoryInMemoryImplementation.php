@@ -2,16 +2,16 @@
 
 namespace cacf\infrastructure\repositories;
 
-use cacf\models\Identifier;
-use cacf\models\IdentifierFactory;
-use cacf\models\User;
+use cacf\models\identifier\Identifier;
+use cacf\models\identifier\IdentifierFactory;
+use cacf\models\user\User;
 
 class UserRepositoryInMemoryImplementation implements UserRepository
 {
     private $identifierFactory;
     private $users;
 
-    public function __construct( IdentifierFactory $identifierFactory)
+    public function __construct(IdentifierFactory $identifierFactory)
     {
         $this->identifierFactory = $identifierFactory;
     }
