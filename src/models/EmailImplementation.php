@@ -13,10 +13,18 @@ class EmailImplementation implements Email
         if ( ! filter_var($emailText, FILTER_VALIDATE_EMAIL)) {
             throw new EmailIsNotValidException();
         }
+
+        $this->setEmailText($emailText);
     }
 
-    public function getValue(): string
+    private function setEmailText($emailText)
+    {
+        $this->emailText = $emailText;
+    }
+
+    public function getEmailText(): string
     {
         return $this->emailText;
     }
+
 }

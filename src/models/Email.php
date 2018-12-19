@@ -6,5 +6,5 @@ namespace cacf\models;
 
 interface Email
 {
-    public function getValue():string;
+    public function getEmailText():string;
 }
