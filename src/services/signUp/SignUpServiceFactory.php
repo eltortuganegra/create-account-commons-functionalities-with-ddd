@@ -2,11 +2,27 @@
 
 namespace cacf\services\signUp;
 
+use cacf\infrastructure\repositories\UserRepository;
+use cacf\models\EmailFactory;
+use cacf\models\PasswordFactory;
+use cacf\models\UserFactory;
+
 class SignUpServiceFactory
 {
-    public function create()
+    public function create(UserRepository $userRepository)
     {
-        return new SignUpService();
+        $signUpServiceResponseFactory = new SignUpServiceResponseFactory();
+        $emailFactory = new EmailFactory();
+        $passwordFactory = new PasswordFactory();
+        $userFactory = new UserFactory();
+
+        return new SignUpService(
+            $userRepository,
+            $signUpServiceResponseFactory,
+            $emailFactory,
+            $passwordFactory,
+            $userFactory
+        );
     }
 
 }

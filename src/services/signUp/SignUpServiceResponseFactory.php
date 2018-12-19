@@ -3,13 +3,14 @@
 namespace cacf\services\signUp;
 
 
+use cacf\models\Identifier;
 use cacf\services\ServiceResponse;
 
 class SignUpServiceResponseFactory
 {
-    public function create(): ServiceResponse
+    public function create(Identifier $identifier): ServiceResponse
     {
-        return new SignUpServiceResponse();
+        return new SignUpServiceResponse($identifier);
     }
 
 }
