@@ -8,11 +8,28 @@ class SignUpServiceRequest implements ServiceRequest
 {
     private $email;
     private $password;
+    private $fromEmail;
+    private $subject;
+    private $body;
 
-    public function __construct(string $email, string $password)
+    public function __construct(
+        string $email,
+        string $password,
+        string $fromEmail,
+        string $subject,
+        string $body
+    )
     {
         $this->email = $email;
         $this->password = $password;
+        $this->fromEmail = $fromEmail;
+        $this->subject = $subject;
+        $this->body = $body;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 
     public function getPassword(): string
@@ -20,9 +37,19 @@ class SignUpServiceRequest implements ServiceRequest
         return $this->password;
     }
 
-    public function getEmail(): string
+    public function getFromEmail(): string
     {
-        return $this->email;
+        return $this->fromEmail;
+    }
+
+    public function getSubject(): string
+    {
+        return $this->subject;
+    }
+
+    public function getBody(): string
+    {
+        return $this->body;
     }
 
 }

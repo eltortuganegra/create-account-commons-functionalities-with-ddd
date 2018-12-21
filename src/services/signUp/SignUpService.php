@@ -2,7 +2,7 @@
 
 namespace cacf\services\signUp;
 
-
+use cacf\infrastructure\emailNotifications\EmailNotification;
 use cacf\infrastructure\repositories\UserRepository;
 use cacf\models\email\EmailFactory;
 use cacf\models\password\PasswordFactory;
@@ -18,13 +18,17 @@ class SignUpService implements Service
     private $emailFactory;
     private $passwordFactory;
     private $userFactory;
+    private $emailNotification;
+    private $user;
+    private $serviceResponse;
 
     public function __construct(
         UserRepository $userRepository,
         SignUpServiceResponseFactory $signUpServiceResponseFactory,
         EmailFactory $emailFactory,
         PasswordFactory $passwordFactory,
-        UserFactory $userFactory
+        UserFactory $userFactory,
+        EmailNotification $emailNotification
     )
     {
         $this->signUpServiceResponseFactory = $signUpServiceResponseFactory;
@@ -32,20 +36,54 @@ class SignUpService implements Service
         $this->emailFactory = $emailFactory;
         $this->passwordFactory = $passwordFactory;
         $this->userFactory = $userFactory;
+        $this->emailNotification = $emailNotification;
     }
 
     public function execute(ServiceRequest $serviceRequest): ServiceResponse
     {
+        $this->createUser($serviceRequest);
+        $this->addUserToRepository();
+        $this->sendSignUpEmailNotification($serviceRequest);
+        $this->createResponse();
+
+        return $this->serviceResponse;
+    }
+
+    private function createUser(ServiceRequest $serviceRequest)
+    {
         $email = $this->emailFactory->create($serviceRequest->getEmail());
         $password = $this->passwordFactory->create($serviceRequest->getPassword());
-        $user = $this->userFactory->create();
-        $user->setIdentifier($this->userRepository->getNextIdentifier());
-        $user->setEmail($email);
-        $user->setPassword($password);
+        $this->user = $this->userFactory->create();
+        $this->user->setIdentifier($this->userRepository->getNextIdentifier());
+        $this->user->setEmail($email);
+        $this->user->setPassword($password);
+    }
 
-        $this->userRepository->add($user);
+    private function addUserToRepository(): void
+    {
+        $this->userRepository->add($this->user);
+    }
 
-        return $this->signUpServiceResponseFactory->create($user->getIdentifier());
+    private function createResponse()
+    {
+        $this->serviceResponse = $this->signUpServiceResponseFactory->create(
+            $this->user->getIdentifier(),
+            $this->emailNotification->isSent()
+        );
+    }
+
+    private function sendSignUpEmailNotification(ServiceRequest $serviceRequest): void
+    {
+        $emailFactory = new EmailFactory();
+        $toEmail = $emailFactory->create($serviceRequest->getEmail());
+        $fromEmail = $emailFactory->create($serviceRequest->getFromEmail());
+
+        $this->emailNotification->send(
+            $toEmail,
+            $fromEmail,
+            $serviceRequest->getSubject(),
+            $serviceRequest->getBody()
+        );
     }
 
 }

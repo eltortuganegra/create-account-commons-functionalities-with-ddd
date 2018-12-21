@@ -2,6 +2,7 @@
 
 namespace cacf\services\signUp;
 
+use cacf\infrastructure\emailNotifications\EmailNotification;
 use cacf\infrastructure\repositories\UserRepository;
 use cacf\models\email\EmailFactory;
 use cacf\models\password\PasswordFactory;
@@ -9,7 +10,7 @@ use cacf\models\user\UserFactory;
 
 class SignUpServiceFactory
 {
-    public function create(UserRepository $userRepository)
+    public function create(UserRepository $userRepository, EmailNotification $emailNotification)
     {
         $signUpServiceResponseFactory = new SignUpServiceResponseFactory();
         $emailFactory = new EmailFactory();
@@ -21,7 +22,8 @@ class SignUpServiceFactory
             $signUpServiceResponseFactory,
             $emailFactory,
             $passwordFactory,
-            $userFactory
+            $userFactory,
+            $emailNotification
         );
     }
 
