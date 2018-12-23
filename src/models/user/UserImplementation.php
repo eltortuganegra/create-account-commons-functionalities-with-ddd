@@ -2,6 +2,7 @@
 
 namespace cacf\models\user;
 
+use cacf\models\accountConfirmationCode\AccountConfirmationCode;
 use cacf\models\email\Email;
 use cacf\models\identifier\Identifier;
 use cacf\models\password\Password;
@@ -11,6 +12,7 @@ class UserImplementation implements User
     private $identifier;
     private $email;
     private $password;
+    private $accountConfirmationCode;
 
     public function setIdentifier(Identifier $identifier)
     {
@@ -40,5 +42,25 @@ class UserImplementation implements User
     public function getPassword(): Password
     {
         return $this->password;
+    }
+
+    public function setAccountConfirmationCode(AccountConfirmationCode $accountConfirmationCode)
+    {
+        $this->accountConfirmationCode = $accountConfirmationCode;
+    }
+
+    public function getAccountConfirmationCode(): AccountConfirmationCode
+    {
+        return $this->accountConfirmationCode;
+    }
+
+    public function confirmAccount()
+    {
+        $this->accountConfirmationCode = null;
+    }
+
+    public function isAccountConfirmed()
+    {
+        return $this->accountConfirmationCode == null;
     }
 }

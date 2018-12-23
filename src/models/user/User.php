@@ -15,4 +15,5 @@ interface User
     public function getEmail(): Email;
     public function setPassword(Password $password);
     public function getPassword(): Password;
+    public function confirmAccount();
 }

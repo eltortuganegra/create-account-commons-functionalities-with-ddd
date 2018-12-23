@@ -4,6 +4,7 @@ namespace cacf\services\signUp;
 
 use cacf\infrastructure\emailNotifications\EmailNotification;
 use cacf\infrastructure\repositories\UserRepository;
+use cacf\models\accountConfirmationCode\AccountConfirmationCodeFactory;
 use cacf\models\email\EmailFactory;
 use cacf\models\password\PasswordFactory;
 use cacf\models\user\UserFactory;
@@ -21,6 +22,7 @@ class SignUpService implements Service
     private $emailNotification;
     private $user;
     private $serviceResponse;
+    private $accountConfirmationCodeFactory;
 
     public function __construct(
         UserRepository $userRepository,
@@ -28,7 +30,8 @@ class SignUpService implements Service
         EmailFactory $emailFactory,
         PasswordFactory $passwordFactory,
         UserFactory $userFactory,
-        EmailNotification $emailNotification
+        EmailNotification $emailNotification,
+        AccountConfirmationCodeFactory $accountConfirmationCodeFactory
     )
     {
         $this->signUpServiceResponseFactory = $signUpServiceResponseFactory;
@@ -37,6 +40,7 @@ class SignUpService implements Service
         $this->passwordFactory = $passwordFactory;
         $this->userFactory = $userFactory;
         $this->emailNotification = $emailNotification;
+        $this->accountConfirmationCodeFactory = $accountConfirmationCodeFactory;
     }
 
     public function execute(ServiceRequest $serviceRequest): ServiceResponse
@@ -57,6 +61,7 @@ class SignUpService implements Service
         $this->user->setIdentifier($this->userRepository->getNextIdentifier());
         $this->user->setEmail($email);
         $this->user->setPassword($password);
+        $this->user->setAccountConfirmationCode($this->accountConfirmationCodeFactory->random());
     }
 
     private function addUserToRepository(): void

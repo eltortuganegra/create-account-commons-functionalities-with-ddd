@@ -2,6 +2,8 @@
 
 namespace cacf\infrastructure\repositories;
 
+use AccountConfirmCode;
+use cacf\models\accountConfirmationCode\AccountConfirmationCode;
 use cacf\models\identifier\Identifier;
 use cacf\models\identifier\IdentifierFactory;
 use cacf\models\user\User;
@@ -11,6 +13,7 @@ class UserRepositoryInMemoryImplementation implements UserRepository
 {
     private $identifierFactory;
     private $users;
+    private $usersByAccountConfirmationCode;
 
     public function __construct(IdentifierFactory $identifierFactory)
     {
@@ -29,6 +32,10 @@ class UserRepositoryInMemoryImplementation implements UserRepository
     {
         $key = $user->getIdentifier()->getValue();
         $this->users[$key] = $user;
+
+        $key = $user->getAccountConfirmationCode()->getCode();
+        $this->usersByAccountConfirmationCode[$key] = $user;
+
     }
 
     public function find(Identifier $identifier): User
@@ -36,5 +43,18 @@ class UserRepositoryInMemoryImplementation implements UserRepository
         $key = $identifier->getValue();
 
         return $this->users[$key];
+    }
+
+    public function update(User $user)
+    {
+        $key = $user->getIdentifier()->getValue();
+        $this->users[$key] = $user;
+    }
+
+    public function findByAccountConfirmationCode(AccountConfirmationCode $accountConfirmationCodeCode): User
+    {
+        $key = $accountConfirmationCodeCode->getCode();
+
+        return $this->usersByAccountConfirmationCode[$key];
     }
 }

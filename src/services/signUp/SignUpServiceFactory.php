@@ -4,6 +4,7 @@ namespace cacf\services\signUp;
 
 use cacf\infrastructure\emailNotifications\EmailNotification;
 use cacf\infrastructure\repositories\UserRepository;
+use cacf\models\accountConfirmationCode\AccountConfirmationCodeFactory;
 use cacf\models\email\EmailFactory;
 use cacf\models\password\PasswordFactory;
 use cacf\models\user\UserFactory;
@@ -16,6 +17,7 @@ class SignUpServiceFactory
         $emailFactory = new EmailFactory();
         $passwordFactory = new PasswordFactory();
         $userFactory = new UserFactory();
+        $accountConfirmationCodeFactory = new AccountConfirmationCodeFactory();
 
         return new SignUpService(
             $userRepository,
@@ -23,7 +25,8 @@ class SignUpServiceFactory
             $emailFactory,
             $passwordFactory,
             $userFactory,
-            $emailNotification
+            $emailNotification,
+            $accountConfirmationCodeFactory
         );
     }
 
