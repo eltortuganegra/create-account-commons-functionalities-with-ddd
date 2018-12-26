@@ -67,7 +67,12 @@ class leChuckWantsRecoveryHisPasswordTest extends TestCase
 
     private function createRecoveryPasswordCodeFactory(): void
     {
-        $this->recoveryPasswordCodeFactory = new RecoveryPasswordCodeFactory();
+        $validRecoveryPasswordCode = '1d656b9a-ba35-4968-8b12-8eb9b3cb2a56';
+        $recoveryPasswordCodeFactory = new RecoveryPasswordCodeFactory();
+        $recoveryPasswordCode = $recoveryPasswordCodeFactory->create($validRecoveryPasswordCode);
+
+        $this->recoveryPasswordCodeFactory = $this->createMock(RecoveryPasswordCodeFactory::class);
+        $this->recoveryPasswordCodeFactory->method('random')->willReturn($recoveryPasswordCode);
     }
 
     private function createRecoveryPasswordService()
@@ -98,6 +103,20 @@ class leChuckWantsRecoveryHisPasswordTest extends TestCase
 
         // Assert
         $this->assertTrue($isString);
+    }
+
+    public function testLeChuckShouldHaveTheDefaultRecoveryPasswordCodeWhenHeRecoveryHisPassword()
+    {
+        // Arrange
+        $emailFactory = new EmailFactory();
+        $email = $emailFactory->create('lechuck@thesecretofmonkeyisland.com');
+        $user = $this->userRepository->findByEmail($email);
+
+        // Act
+        $recoveryPasswordCode = $user->getRecoveryPasswordCode();
+
+        // Assert
+        $this->assertEquals('1d656b9a-ba35-4968-8b12-8eb9b3cb2a56', $recoveryPasswordCode->getCode());
     }
 
     public function testAnRecoveryPasswordEmailShouldBeSentWhenLeChuckRecoveryHisPassword()
