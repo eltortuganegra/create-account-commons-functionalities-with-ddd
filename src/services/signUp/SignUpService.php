@@ -57,11 +57,13 @@ class SignUpService implements Service
     {
         $email = $this->emailFactory->create($serviceRequest->getEmail());
         $password = $this->passwordFactory->create($serviceRequest->getPassword());
-        $this->user = $this->userFactory->create();
-        $this->user->setIdentifier($this->userRepository->getNextIdentifier());
-        $this->user->setEmail($email);
-        $this->user->setPassword($password);
-        $this->user->setAccountConfirmationCode($this->accountConfirmationCodeFactory->random());
+
+        $this->user = $this->userFactory->create(
+            $this->userRepository->getNextIdentifier(),
+            $email,
+            $password,
+            $this->accountConfirmationCodeFactory->random()
+        );
     }
 
     private function addUserToRepository(): void

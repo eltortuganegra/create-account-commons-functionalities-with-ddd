@@ -14,7 +14,19 @@ class UserImplementation implements User
     private $password;
     private $accountConfirmationCode;
 
-    public function setIdentifier(Identifier $identifier)
+    public function __construct(
+        Identifier $identifier,
+        Email $email,
+        Password $password,
+        AccountConfirmationCode $accountConfirmationCode
+    ) {
+        $this->setIdentifier($identifier);
+        $this->setEmail($email);
+        $this->setPassword($password);
+        $this->setAccountConfirmationCode($accountConfirmationCode);
+    }
+
+    private function setIdentifier(Identifier $identifier)
     {
         $this->identifier = $identifier;
     }
@@ -24,7 +36,7 @@ class UserImplementation implements User
         return $this->identifier;
     }
 
-    public function setEmail(Email $email)
+    private function setEmail(Email $email)
     {
         $this->email = $email;
     }
@@ -34,7 +46,7 @@ class UserImplementation implements User
         return $this->email;
     }
 
-    public function setPassword(Password $password)
+    private function setPassword(Password $password)
     {
         $this->password = $password;
     }
@@ -44,7 +56,7 @@ class UserImplementation implements User
         return $this->password;
     }
 
-    public function setAccountConfirmationCode(AccountConfirmationCode $accountConfirmationCode)
+    private function setAccountConfirmationCode(AccountConfirmationCode $accountConfirmationCode)
     {
         $this->accountConfirmationCode = $accountConfirmationCode;
     }
