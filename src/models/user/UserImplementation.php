@@ -6,6 +6,7 @@ use cacf\models\accountConfirmationCode\AccountConfirmationCode;
 use cacf\models\email\Email;
 use cacf\models\identifier\Identifier;
 use cacf\models\password\Password;
+use cacf\models\recoveryPasswordCode\recoveryPasswordCode;
 
 class UserImplementation implements User
 {
@@ -13,6 +14,7 @@ class UserImplementation implements User
     private $email;
     private $password;
     private $accountConfirmationCode;
+    private $recoveryPasswordCode;
 
     public function __construct(
         Identifier $identifier,
@@ -74,5 +76,20 @@ class UserImplementation implements User
     public function isAccountConfirmed()
     {
         return $this->accountConfirmationCode == null;
+    }
+
+    public function recoveryPassword(RecoveryPasswordCode $recoveryPasswordCode)
+    {
+        $this->setRecoveryPasswordCode($recoveryPasswordCode);
+    }
+
+    private function setRecoveryPasswordCode(RecoveryPasswordCode $recoveryPasswordCode)
+    {
+        $this->recoveryPasswordCode = $recoveryPasswordCode;
+    }
+
+    public function getRecoveryPasswordCode(): RecoveryPasswordCode
+    {
+        return $this->recoveryPasswordCode;
     }
 }

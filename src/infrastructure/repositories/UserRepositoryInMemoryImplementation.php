@@ -4,16 +4,20 @@ namespace cacf\infrastructure\repositories;
 
 use AccountConfirmCode;
 use cacf\models\accountConfirmationCode\AccountConfirmationCode;
+use cacf\models\email\Email;
 use cacf\models\identifier\Identifier;
 use cacf\models\identifier\IdentifierFactory;
+use cacf\models\recoveryPasswordCode\recoveryPasswordCode;
 use cacf\models\user\User;
 use Ramsey\Uuid\Uuid;
 
 class UserRepositoryInMemoryImplementation implements UserRepository
 {
-    private $identifierFactory;
     private $users;
     private $usersByAccountConfirmationCode;
+    private $usersByEmail;
+    private $usersByRecoveryPasswordCode;
+    private $identifierFactory;
 
     public function __construct(IdentifierFactory $identifierFactory)
     {
@@ -36,6 +40,8 @@ class UserRepositoryInMemoryImplementation implements UserRepository
         $key = $user->getAccountConfirmationCode()->getCode();
         $this->usersByAccountConfirmationCode[$key] = $user;
 
+        $key = $user->getEmail()->getEmailText();
+        $this->usersByEmail[$key] = $user;
     }
 
     public function find(Identifier $identifier): User
@@ -49,6 +55,14 @@ class UserRepositoryInMemoryImplementation implements UserRepository
     {
         $key = $user->getIdentifier()->getValue();
         $this->users[$key] = $user;
+
+        $key = $user->getEmail()->getEmailText();
+        $this->usersByEmail[$key] = $user;
+
+        $key = $user->getRecoveryPasswordCode()->getCode();
+        if ( ! empty($key)) {
+            $this->usersByRecoveryPasswordCode[$key] = $user;
+        }
     }
 
     public function findByAccountConfirmationCode(AccountConfirmationCode $accountConfirmationCodeCode): User
@@ -56,5 +70,19 @@ class UserRepositoryInMemoryImplementation implements UserRepository
         $key = $accountConfirmationCodeCode->getCode();
 
         return $this->usersByAccountConfirmationCode[$key];
+    }
+
+    public function findByEmail(Email $email)
+    {
+        $key = $email->getEmailText();
+
+        return $this->usersByEmail[$key];
+    }
+
+    public function findByRecoveryPasswordCode(RecoveryPasswordCode $recoveryPasswordCode): User
+    {
+        $key = $recoveryPasswordCode->getCode();
+
+        return $this->usersByRecoveryPasswordCode[$key];
     }
 }
