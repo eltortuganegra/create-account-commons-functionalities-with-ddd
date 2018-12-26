@@ -6,9 +6,8 @@ namespace cacf\services\recoveryPassword;
 
 use cacf\infrastructure\emailNotifications\EmailNotification;
 use cacf\infrastructure\repositories\UserRepository;
-use cacf\models\email\Email;
 use cacf\models\email\EmailFactory;
-use cacf\models\recoveryPasswordCode\recoveryPasswordCode;
+use cacf\models\recoveryPasswordCode\RecoveryPasswordCodeFactory;
 use cacf\services\Service;
 use cacf\services\ServiceRequest;
 use cacf\services\ServiceResponse;
@@ -18,23 +17,20 @@ class RecoveryPasswordService implements Service
     private $serviceResponse;
     private $userRepository;
     private $user;
-    private $recoveryPasswordCode;
     private $emailNotification;
 
     public function __construct(
         UserRepository $userRepository,
-        EmailNotification $emailNotification,
-        RecoveryPasswordCode $recoveryPasswordCode
+        EmailNotification $emailNotification
     ) {
         $this->userRepository = $userRepository;
-        $this->recoveryPasswordCode = $recoveryPasswordCode;
         $this->emailNotification = $emailNotification;
     }
 
     public function execute(ServiceRequest $serviceRequest): ServiceResponse
     {
         $this->findUserInRepository($serviceRequest);
-        $this->recoveryPasswordForUser();
+        $this->recoveryPasswordForUser($serviceRequest);
         $this->updateUserInRepository();
         $this->sendEmailNotification($serviceRequest);
         $this->createServiceResponse();
@@ -55,9 +51,12 @@ class RecoveryPasswordService implements Service
         $this->serviceResponse = $serviceResponseFactory->create($this->emailNotification->isSent());
     }
 
-    private function recoveryPasswordForUser(): void
+    private function recoveryPasswordForUser(ServiceRequest $serviceRequest): void
     {
-        $this->user->recoveryPassword($this->recoveryPasswordCode);
+        $recoveryPasswordCodeFactory = new RecoveryPasswordCodeFactory();
+        $recoveryPasswordCode = $recoveryPasswordCodeFactory->create($serviceRequest->getRecoveryPasswordCode());
+
+        $this->user->recoveryPassword($recoveryPasswordCode);
     }
 
     private function updateUserInRepository()

@@ -17,7 +17,6 @@ class leChuckWantsRecoveryHisPasswordTest extends TestCase
     private $serviceResponse;
     private $userRepository;
     private $emailNotification;
-    private $recoveryPasswordCodeFactory;
 
     public function setUp()
     {
@@ -25,7 +24,6 @@ class leChuckWantsRecoveryHisPasswordTest extends TestCase
         $this->createEmailNotification();
         $this->loadLeChuckUserInUserRepository();
         $this->createServiceRequestToLeChuckRecoveryPassword();
-        $this->createRecoveryPasswordCodeFactory();
         $this->createRecoveryPasswordService();
         $this->executeRecoveryPasswordService();
     }
@@ -52,27 +50,19 @@ class leChuckWantsRecoveryHisPasswordTest extends TestCase
     private function createServiceRequestToLeChuckRecoveryPassword()
     {
         $leChuckEmailAddress = 'lechuck@thesecretofmonkeyisland.com';
+        $recoveryPasswordCode = '1d656b9a-ba35-4968-8b12-8eb9b3cb2a56';
         $fromEmail = 'no-reply@thesecretofmonkeyisland.com';
         $subject = 'Recovery password';
-        $body = 'This is the email to recovery password.';
+        $body = 'This is the content of email to recovery password.';
 
         $serviceRequestFactory = new RecoveryPasswordServiceRequestFactory();
         $this->serviceRequest = $serviceRequestFactory->create(
             $leChuckEmailAddress,
+            $recoveryPasswordCode,
             $fromEmail,
             $subject,
             $body
         );
-    }
-
-    private function createRecoveryPasswordCodeFactory(): void
-    {
-        $validRecoveryPasswordCode = '1d656b9a-ba35-4968-8b12-8eb9b3cb2a56';
-        $recoveryPasswordCodeFactory = new RecoveryPasswordCodeFactory();
-        $recoveryPasswordCode = $recoveryPasswordCodeFactory->create($validRecoveryPasswordCode);
-
-        $this->recoveryPasswordCodeFactory = $this->createMock(RecoveryPasswordCodeFactory::class);
-        $this->recoveryPasswordCodeFactory->method('random')->willReturn($recoveryPasswordCode);
     }
 
     private function createRecoveryPasswordService()
@@ -80,8 +70,7 @@ class leChuckWantsRecoveryHisPasswordTest extends TestCase
         $serviceFactory = new RecoveryPasswordServiceFactory();
         $this->service = $serviceFactory->create(
             $this->userRepository,
-            $this->emailNotification,
-            $this->recoveryPasswordCodeFactory
+            $this->emailNotification
         );
     }
 
