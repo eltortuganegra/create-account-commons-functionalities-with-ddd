@@ -33,7 +33,7 @@ class SignUpServiceWithLechuckUserTest extends TestCase
         $password = 'pirate\'s life';
         $fromEmail = 'no-reply@themonkeyisland.com';
         $subject = 'Welcome!';
-        $body = 'Your account has been create sucessfully.';
+        $body = 'Your account has been create successfully.';
 
         $signUpServiceRequestFactory = new SignUpServiceRequestFactory();
         $this->requestService = $signUpServiceRequestFactory->create(
