@@ -88,8 +88,26 @@ class UserImplementation implements User
         $this->recoveryPasswordCode = $recoveryPasswordCode;
     }
 
-    public function getRecoveryPasswordCode(): RecoveryPasswordCode
+    public function getRecoveryPasswordCode(): ?RecoveryPasswordCode
     {
         return $this->recoveryPasswordCode;
     }
+
+    public function resetPassword(Password $password)
+    {
+        $this->setPassword($password);
+        $this->deleteRecoveryPasswordCode();
+    }
+
+    private function deleteRecoveryPasswordCode(): void
+    {
+        $this->recoveryPasswordCode = null;
+    }
+
+    public function verifyPassword(string $password): bool
+    {
+        return $this->password->verify($password);
+    }
+
+
 }

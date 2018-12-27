@@ -9,6 +9,7 @@ use cacf\services\recoveryPassword\RecoveryPasswordServiceFactory;
 use cacf\services\recoveryPassword\RecoveryPasswordServiceRequestFactory;
 use tests\fixtures\user\FixtureUserFactory;
 use PHPUnit\Framework\TestCase;
+use tests\fixtures\user\LeChuckFixtureUserFactory;
 
 class leChuckWantsRecoveryHisPasswordTest extends TestCase
 {
@@ -42,8 +43,8 @@ class leChuckWantsRecoveryHisPasswordTest extends TestCase
 
     private function loadLeChuckUserInUserRepository(): void
     {
-        $fixtureUserFactory = new FixtureUserFactory();
-        $leChuckUser = $fixtureUserFactory->createLeChuckUser();
+        $leChuckFixtureUserFactory = new LeChuckFixtureUserFactory();
+        $leChuckUser = $leChuckFixtureUserFactory->create();
         $this->userRepository->add($leChuckUser);
     }
 

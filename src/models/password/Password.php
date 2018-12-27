@@ -6,5 +6,6 @@ namespace cacf\models\password;
 
 interface Password
 {
-    public function getText():string;
+    public function verify(string $password): bool;
+    public function getHash(): string;
 }

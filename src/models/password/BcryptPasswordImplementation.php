@@ -6,7 +6,7 @@ namespace cacf\models\password;
 
 class BcryptPasswordImplementation implements Password
 {
-    private $text;
+    private $hash;
 
     public function __construct(string $text)
     {
@@ -15,18 +15,16 @@ class BcryptPasswordImplementation implements Password
 
     private function encryptPasswordText(string $text): void
     {
-        $passwordHash = password_hash($text, PASSWORD_BCRYPT);
-        $this->setText($passwordHash);
+        $this->hash = password_hash($text, PASSWORD_BCRYPT);
     }
 
-    private function setText(string $text)
+    public function getHash(): string
     {
-        $this->text = $text;
+        return $this->hash;
     }
 
-    public function getText(): string
+    public function verify(string $password): bool
     {
-        return $this->text;
+        return password_verify($password, $this->hash);
     }
-
 }

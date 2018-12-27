@@ -14,7 +14,7 @@ class PasswordPiratesLifeShouldReturnAnEncryptTextTest extends TestCase
         $password = $passwordFactory->create($passwordText);
 
         // Act
-        $isValid = password_verify($passwordText, $password->getText());
+        $isValid = password_verify($passwordText, $password->getHash());
 
         // Assert
         $this->assertTrue($isValid);

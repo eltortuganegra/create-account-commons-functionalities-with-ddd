@@ -59,9 +59,12 @@ class UserRepositoryInMemoryImplementation implements UserRepository
         $key = $user->getEmail()->getEmailText();
         $this->usersByEmail[$key] = $user;
 
-        $key = $user->getRecoveryPasswordCode()->getCode();
-        if ( ! empty($key)) {
-            $this->usersByRecoveryPasswordCode[$key] = $user;
+        $recoveryPasswordCode = $user->getRecoveryPasswordCode();
+        if ( ! empty($recoveryPasswordCode)) {
+            $key = $user->getRecoveryPasswordCode()->getCode();
+            if ( ! empty($key)) {
+                $this->usersByRecoveryPasswordCode[$key] = $user;
+            }
         }
     }
 

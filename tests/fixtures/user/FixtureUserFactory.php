@@ -2,19 +2,24 @@
 
 namespace tests\fixtures\user;
 
-use cacf\infrastructure\repositories\UserRepositoryInMemoryFactory;
 use cacf\models\accountConfirmationCode\AccountConfirmationCode;
 use cacf\models\accountConfirmationCode\AccountConfirmationCodeFactory;
 use cacf\models\email\Email;
 use cacf\models\email\EmailFactory;
+use cacf\models\identifier\IdentifierFactory;
 use cacf\models\password\Password;
 use cacf\models\password\PasswordFactory;
 use cacf\models\user\User;
 use cacf\models\user\UserFactory;
 
-class FixtureUserFactory
+abstract class FixtureUserFactory
 {
-    public function createLeChuckUser(): User
+    const IDENTIFIER = '';
+    const EMAIL = '';
+    const PASSWORD = '';
+    const ACCOUNT_CONFIRMATION_CODE = '';
+
+    public function create(): User
     {
         $identifier = $this->createIdentifier();
         $email = $this->createEmail();
@@ -30,14 +35,12 @@ class FixtureUserFactory
         );
 
         return $user;
-
     }
 
     private function createIdentifier()
     {
-        $userRepositoryFactory = new UserRepositoryInMemoryFactory();
-        $userRepository = $userRepositoryFactory->create();
-        $identifier = $userRepository->getNextIdentifier();
+        $identifierFactory = new IdentifierFactory();
+        $identifier = $identifierFactory->create(static::IDENTIFIER);
 
         return $identifier;
     }
@@ -45,7 +48,7 @@ class FixtureUserFactory
     private function createEmail(): Email
     {
         $emailFactory = new EmailFactory();
-        $email = $emailFactory->create('lechuck@thesecretofmonkeyisland.com');
+        $email = $emailFactory->create(static::EMAIL);
 
         return $email;
     }
@@ -53,7 +56,7 @@ class FixtureUserFactory
     private function createPassword(): Password
     {
         $passwordFactory = new PasswordFactory();
-        $password = $passwordFactory->create('validpassword');
+        $password = $passwordFactory->create(self::PASSWORD);
 
         return $password;
     }
@@ -61,7 +64,7 @@ class FixtureUserFactory
     private function createAccountConfirmationCode(): AccountConfirmationCode
     {
         $accountConfirmationCodeFactory = new AccountConfirmationCodeFactory();
-        $accountConfirmationCode = $accountConfirmationCodeFactory->create('validAccountConfirmationCode');
+        $accountConfirmationCode = $accountConfirmationCodeFactory->create(static::ACCOUNT_CONFIRMATION_CODE);
 
         return $accountConfirmationCode;
     }
