@@ -2,6 +2,7 @@
 
 
 use cacf\infrastructure\repositories\UserRepositoryInMemoryFactory;
+use cacf\models\recoveryPasswordCode\RecoveryPasswordCode;
 use cacf\models\recoveryPasswordCode\RecoveryPasswordCodeFactory;
 use cacf\models\user\User;
 use cacf\services\resetPassword\ResetPasswordServiceFactory;
@@ -12,10 +13,13 @@ use tests\fixtures\password\PasswordFactoryFixture;
 use tests\fixtures\recoveryPasswordCode\RecoveryPasswordCodeFactoryFixture;
 use tests\fixtures\user\LeChuckFixtureUserFactory;
 
-class LeChuckResetHisPasswordAccountTest extends TestCase
+class LeChuckResetHisAccountPasswordTest extends TestCase
 {
     private $userRepository;
     private $leChuckUser;
+    private $serviceRequest;
+    private $service;
+    private $serviceResponse;
 
     public function setUp()
     {
@@ -24,6 +28,9 @@ class LeChuckResetHisPasswordAccountTest extends TestCase
         $this->addLeChuckToUserRepository();
         $this->updateLeChuckWithDefaultRecoveryPasswordCode();
         $this->updateUserRepositoryWithLechuck();
+        $this->createServiceRequest();
+        $this->createService();
+        $this->executeService();
     }
 
     private function createUserRepository()
@@ -45,9 +52,16 @@ class LeChuckResetHisPasswordAccountTest extends TestCase
 
     private function updateLeChuckWithDefaultRecoveryPasswordCode(): void
     {
+        $recoveryPasswordCode = $this->getDefaultRecoveryPasswordCode();
+        $this->leChuckUser->recoveryPassword($recoveryPasswordCode);
+    }
+
+    private function getDefaultRecoveryPasswordCode(): RecoveryPasswordCode
+    {
         $recoveryPasswordCodeFactory = new RecoveryPasswordCodeFactory();
         $recoveryPasswordCode = $recoveryPasswordCodeFactory->create(RecoveryPasswordCodeFactoryFixture::DEFAULT_CODE);
-        $this->leChuckUser->recoveryPassword($recoveryPasswordCode);
+
+        return $recoveryPasswordCode;
     }
 
     private function updateUserRepositoryWithLechuck(): void
@@ -55,15 +69,28 @@ class LeChuckResetHisPasswordAccountTest extends TestCase
         $this->userRepository->update($this->leChuckUser);
     }
 
+    private function createServiceRequest()
+    {
+        $recoveryPasswordCode = RecoveryPasswordCodeFactoryFixture::DEFAULT_CODE;
+        $password = PasswordFactoryFixture::DEFAULT;
+        $serviceRequestFactory = new ResetPasswordServiceRequestFactory();
+        $this->serviceRequest = $serviceRequestFactory->create($recoveryPasswordCode, $password);
+    }
+
+    private function createService(): void
+    {
+        $serviceFactory = new ResetPasswordServiceFactory();
+        $this->service = $serviceFactory->create($this->userRepository);
+    }
+
+    private function executeService(): void
+    {
+        $this->serviceResponse = $this->service->execute($this->serviceRequest);
+    }
+
     public function testAccountPasswordShouldBeUpdatedWhenLeChuckResetHisAccountPassword()
     {
         // Arrange
-        $serviceRequest = $this->createServiceRequest();
-
-        $serviceFactory = new ResetPasswordServiceFactory();
-        $service = $serviceFactory->create($this->userRepository);
-        $serviceResponse = $service->execute($serviceRequest);
-
         $leChuck = $this->findLeChuckFromRepository();
 
         // Act
@@ -82,14 +109,16 @@ class LeChuckResetHisPasswordAccountTest extends TestCase
         return $user;
     }
 
-    private function createServiceRequest(): ResetPasswordServiceRequest
+    public function testNobodyShouldBeFoundByTheDefaultRecoveryPasswordCodeWhenLeChuckResetHisPassword()
     {
-        $recoveryPasswordCode = RecoveryPasswordCodeFactoryFixture::DEFAULT_CODE;
-        $password = PasswordFactoryFixture::DEFAULT;
-        $serviceRequestFactory = new ResetPasswordServiceRequestFactory();
-        $serviceRequest = $serviceRequestFactory->create($recoveryPasswordCode, $password);
+        // Arrange
+        $recoveryPasswordCode = $this->getDefaultRecoveryPasswordCode();
+        $nobody = $this->userRepository->findByRecoveryPasswordCode($recoveryPasswordCode);
 
-        return $serviceRequest;
+        // Act
+        $nobodyIsFound = ($nobody === null);
+
+        // Assert
+        $this->assertTrue($nobodyIsFound);
     }
-
 }

@@ -61,9 +61,14 @@ class UserRepositoryInMemoryImplementation implements UserRepository
 
         $recoveryPasswordCode = $user->getRecoveryPasswordCode();
         if ( ! empty($recoveryPasswordCode)) {
-            $key = $user->getRecoveryPasswordCode()->getCode();
+            $key = $recoveryPasswordCode->getCode();
             if ( ! empty($key)) {
                 $this->usersByRecoveryPasswordCode[$key] = $user;
+            }
+        } else {
+            $key = array_search($user, $this->usersByRecoveryPasswordCode);
+            if ( ! empty($key)) {
+                unset($this->usersByRecoveryPasswordCode[$key]);
             }
         }
     }
@@ -82,9 +87,13 @@ class UserRepositoryInMemoryImplementation implements UserRepository
         return $this->usersByEmail[$key];
     }
 
-    public function findByRecoveryPasswordCode(RecoveryPasswordCode $recoveryPasswordCode): User
+    public function findByRecoveryPasswordCode(RecoveryPasswordCode $recoveryPasswordCode): ?User
     {
         $key = $recoveryPasswordCode->getCode();
+
+        if ( ! array_key_exists($key, $this->usersByRecoveryPasswordCode)) {
+            return null;
+        }
 
         return $this->usersByRecoveryPasswordCode[$key];
     }

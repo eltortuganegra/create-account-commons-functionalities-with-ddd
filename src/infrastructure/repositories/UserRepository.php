@@ -16,7 +16,7 @@ interface UserRepository
     public function add(User $user);
     public function find(Identifier $identifier): User;
     public function findByAccountConfirmationCode(AccountConfirmationCode $accountConfirmationCodeCode): User;
-    public function findByRecoveryPasswordCode(RecoveryPasswordCode $recoveryPasswordCode): User;
+    public function findByRecoveryPasswordCode(RecoveryPasswordCode $recoveryPasswordCode): ?User;
     public function findByEmail(Email $email);
     public function update(User $user);
 }
