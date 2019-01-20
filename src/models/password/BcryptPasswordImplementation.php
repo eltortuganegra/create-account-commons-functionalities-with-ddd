@@ -23,8 +23,8 @@ class BcryptPasswordImplementation implements Password
         return $this->hash;
     }
 
-    public function verify(string $password): bool
+    public function verify(string $plainTextPassword): bool
     {
-        return password_verify($password, $this->hash);
+        return password_verify($plainTextPassword, $this->hash);
     }
 }

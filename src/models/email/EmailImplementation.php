@@ -10,11 +10,16 @@ class EmailImplementation implements Email
 
     public function __construct(string $emailText)
     {
-        if ( ! filter_var($emailText, FILTER_VALIDATE_EMAIL)) {
+        if ($this->isEmailValid($emailText)) {
             throw new EmailIsNotValidException();
         }
 
         $this->setEmailText($emailText);
+    }
+
+    private function isEmailValid(string $emailText): bool
+    {
+        return !filter_var($emailText, FILTER_VALIDATE_EMAIL);
     }
 
     private function setEmailText($emailText)

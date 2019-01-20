@@ -56,7 +56,7 @@ abstract class FixtureUserFactory
     private function createPassword(): Password
     {
         $passwordFactory = new PasswordFactory();
-        $password = $passwordFactory->create(self::PASSWORD);
+        $password = $passwordFactory->create(static::PASSWORD);
 
         return $password;
     }
