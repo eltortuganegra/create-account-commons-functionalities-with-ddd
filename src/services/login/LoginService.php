@@ -14,31 +14,57 @@ class LoginService implements Service
 {
     private $loginServiceResponseFactory;
     private $userRepository;
+    private $emailFactory;
+    private $email;
+    private $user;
 
     public function __construct(
         UserRepository $userRepository,
-        LoginServiceResponseFactory $loginServiceResponseFactory
+        LoginServiceResponseFactory $loginServiceResponseFactory,
+        EmailFactory $emailFactory
     ) {
         $this->userRepository = $userRepository;
         $this->loginServiceResponseFactory = $loginServiceResponseFactory;
+        $this->emailFactory = $emailFactory;
     }
 
     public function execute(ServiceRequest $serviceRequest): ServiceResponse
     {
-        $emailFactory = new EmailFactory();
-        $email = $emailFactory->create($serviceRequest->getEmailAddress());
-
-        $user = $this->userRepository->findByEmail($email);
-
-        $password = $user->getPassword();
-        if ($password->verify($serviceRequest->getPlainTextPassword())) {
-            $validCredentials = true;
-            $identifierValue = $user->getIdentifier()->getValue();
-            $emailAddress = $user->getEmail()->getEmailText();
-
-            $serviceResponse = $this->loginServiceResponseFactory->create($validCredentials , $identifierValue, $emailAddress);
+        $this->loadEmailFromServiceRequest($serviceRequest);
+        $this->loadUserFromRepository();
+        if ($this->checkIfPasswordIsValid($serviceRequest->getPlainTextPassword())) {
+            $serviceResponse = $this->buildSuccessLoginResponse();
         }
 
         return $serviceResponse;
     }
+
+    private function loadEmailFromServiceRequest(ServiceRequest $serviceRequest): void
+    {
+        $this->email = $this->emailFactory->create($serviceRequest->getEmailAddress());
+    }
+
+    private function loadUserFromRepository(): void
+    {
+        $this->user = $this->userRepository->findByEmail($this->email);
+    }
+
+    private function checkIfPasswordIsValid(string $plainTextPassword): bool
+    {
+        $password = $this->user->getPassword();
+
+        return $password->verify($plainTextPassword);
+    }
+
+    private function buildSuccessLoginResponse(): ServiceResponse
+    {
+        $validCredentials = true;
+        $identifierValue = $this->user->getIdentifier()->getValue();
+        $emailAddress = $this->user->getEmail()->getEmailText();
+
+        $serviceResponse = $this->loginServiceResponseFactory->create($validCredentials, $identifierValue, $emailAddress);
+
+        return $serviceResponse;
+    }
+
 }
