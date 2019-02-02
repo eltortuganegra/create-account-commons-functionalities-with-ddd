@@ -16,6 +16,7 @@ abstract class FixtureUserFactory
 {
     const IDENTIFIER = '';
     const EMAIL = '';
+    const EMAIL_WRONG = 'invalid@email.com';
     const PASSWORD = '';
     const ACCOUNT_CONFIRMATION_CODE = '';
     const PASSWORD_INVALID = 'Invalid password';

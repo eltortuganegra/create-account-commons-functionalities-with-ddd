@@ -83,6 +83,9 @@ class UserRepositoryInMemoryImplementation implements UserRepository
     public function findByEmail(Email $email)
     {
         $key = $email->getEmailText();
+        if ( ! isset($this->usersByEmail[$key])) {
+            throw new UserNotFoundException();
+        }
 
         return $this->usersByEmail[$key];
     }

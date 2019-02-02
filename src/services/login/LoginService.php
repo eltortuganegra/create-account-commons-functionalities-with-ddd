@@ -4,6 +4,7 @@
 namespace cacf\services\login;
 
 
+use cacf\infrastructure\repositories\UserNotFoundException;
 use cacf\infrastructure\repositories\UserRepository;
 use cacf\models\email\EmailFactory;
 use cacf\services\Service;
@@ -48,7 +49,11 @@ class LoginService implements Service
 
     private function loadUserFromRepository(): void
     {
-        $this->user = $this->userRepository->findByEmail($this->email);
+        try {
+            $this->user = $this->userRepository->findByEmail($this->email);
+        } catch(UserNotFoundException $e) {
+            throw new EmailNotFoundException();
+        }
     }
 
     private function isPasswordValid(string $plainTextPassword): bool
