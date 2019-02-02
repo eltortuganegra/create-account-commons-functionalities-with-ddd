@@ -18,6 +18,7 @@ abstract class FixtureUserFactory
     const EMAIL = '';
     const PASSWORD = '';
     const ACCOUNT_CONFIRMATION_CODE = '';
+    const PASSWORD_INVALID = 'Invalid password';
 
     public function create(): User
     {

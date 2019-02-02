@@ -32,9 +32,11 @@ class LoginService implements Service
     {
         $this->loadEmailFromServiceRequest($serviceRequest);
         $this->loadUserFromRepository();
-        if ($this->checkIfPasswordIsValid($serviceRequest->getPlainTextPassword())) {
-            $serviceResponse = $this->buildSuccessLoginResponse();
+        if ( ! $this->isPasswordValid($serviceRequest->getPlainTextPassword())) {
+            throw new PasswordNotMatchException();
         }
+
+        $serviceResponse = $this->buildSuccessLoginResponse();
 
         return $serviceResponse;
     }
@@ -49,7 +51,7 @@ class LoginService implements Service
         $this->user = $this->userRepository->findByEmail($this->email);
     }
 
-    private function checkIfPasswordIsValid(string $plainTextPassword): bool
+    private function isPasswordValid(string $plainTextPassword): bool
     {
         $password = $this->user->getPassword();
 
