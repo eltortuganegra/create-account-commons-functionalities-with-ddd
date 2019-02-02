@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use tests\fixtures\AddLeChuckToRepository;
 use tests\fixtures\user\LeChuckFixtureUserFactory;
 
-class LeChuckDoesWrongLoginWithBadPasswordTest extends TestCase
+class LeChuckDoesLoginWithWrongPasswordTest extends TestCase
 {
     public function testItShouldThrowWrongPasswordExceptionWhenBadPasswordIsUsed()
     {

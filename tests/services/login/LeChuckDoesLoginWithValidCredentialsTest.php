@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use tests\fixtures\AddLeChuckToRepository;
 use tests\fixtures\user\LeChuckFixtureUserFactory;
 
-class LeChuckDoesLoginTest extends TestCase
+class LeChuckDoesLoginWithValidCredentialsTest extends TestCase
 {
     public function testLeChuckDoesLoginWithHisEmailAndPassword()
     {
